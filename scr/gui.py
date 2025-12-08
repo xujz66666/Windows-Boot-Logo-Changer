@@ -88,6 +88,7 @@ class SystemIconReplacer(QMainWindow):
     def create_warning_box(self, layout):
         """创建警告框"""
         warning_box = QGroupBox('⚠️ 重要警告')
+        warning_box.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         warning_layout = QVBoxLayout()
         warning_layout.setSpacing(8)
         warning_layout.setContentsMargins(15, 10, 15, 10)
@@ -104,12 +105,13 @@ class SystemIconReplacer(QMainWindow):
         
         warning_label = QLabel(warning_text)
         warning_label.setWordWrap(True)
+        warning_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         warning_label.setStyleSheet(STYLES['warning_text'])
         warning_layout.addWidget(warning_label)
         
         warning_box.setLayout(warning_layout)
         warning_box.setStyleSheet(STYLES['warning_box'])
-        layout.addWidget(warning_box)
+        layout.addWidget(warning_box, 0, Qt.AlignTop)
         
     def create_image_processing_area(self, layout):
         """创建图片处理区域"""
@@ -220,44 +222,57 @@ class SystemIconReplacer(QMainWindow):
         layout.addLayout(button_layout)
         
     def load_default_icon(self):
-        """创建Windows启动图标预览"""
-        # 创建黑色背景
-        pixmap = QPixmap(*PREVIEW_SIZE)
-        pixmap.fill(Qt.black)
+        """加载默认Windows图标预览（使用image文件夹中的图片）"""
+        # 尝试从image文件夹加载图片
+        image_path = os.path.join(os.path.dirname(__file__), '../image/OIP-C.jpg')
         
-        painter = QPainter(pixmap)
-        painter.setRenderHint(QPainter.Antialiasing)
-        
-        # 绘制Windows图标（四个蓝色方块）
-        painter.setBrush(QColor(0, 120, 215))  # Windows蓝色
-        painter.setPen(Qt.NoPen)
-        
-        # 四个方格
-        square_size = 40
-        padding = 20
-        spacing = 8
-        
-        squares = [
-            QRect(padding, padding, square_size, square_size),
-            QRect(padding + square_size + spacing, padding, square_size, square_size),
-            QRect(padding, padding + square_size + spacing, square_size, square_size),
-            QRect(padding + square_size + spacing, padding + square_size + spacing, square_size, square_size)
-        ]
-        
-        for square in squares:
-            painter.drawRect(square)
-        
-        # 绘制手绘风格的圆圈
-        painter.setPen(QPen(QColor(0, 120, 215), 3))
-        painter.setBrush(Qt.NoBrush)
-        painter.drawEllipse(QRect(5, 5, PREVIEW_SIZE[0]-10, PREVIEW_SIZE[1]-10))
-        
-        # 绘制底部的小加载点
-        painter.setBrush(QColor(255, 255, 255))
-        painter.drawEllipse(QRect(PREVIEW_SIZE[0]//2 - 3, PREVIEW_SIZE[1]-15, 6, 6))
-        
-        painter.end()
-        self.original_preview.setPixmap(pixmap)
+        if os.path.exists(image_path):
+            # 加载图片并调整大小
+            pixmap = QPixmap(image_path)
+            scaled_pixmap = pixmap.scaled(*PREVIEW_SIZE, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            
+            # 创建黑色背景
+            final_pixmap = QPixmap(*PREVIEW_SIZE)
+            final_pixmap.fill(Qt.black)
+            
+            # 在黑色背景上绘制缩放后的图片
+            painter = QPainter(final_pixmap)
+            painter.setRenderHint(QPainter.Antialiasing)
+            x = (PREVIEW_SIZE[0] - scaled_pixmap.width()) // 2
+            y = (PREVIEW_SIZE[1] - scaled_pixmap.height()) // 2
+            painter.drawPixmap(x, y, scaled_pixmap)
+            painter.end()
+            
+            self.original_preview.setPixmap(final_pixmap)
+        else:
+            # 如果图片不存在，使用默认绘制
+            pixmap = QPixmap(*PREVIEW_SIZE)
+            pixmap.fill(Qt.black)
+            
+            painter = QPainter(pixmap)
+            painter.setRenderHint(QPainter.Antialiasing)
+            
+            # 绘制Windows图标（四个蓝色方块）
+            painter.setBrush(QColor(0, 120, 215))  # Windows蓝色
+            painter.setPen(Qt.NoPen)
+            
+            # 四个方格
+            square_size = 40
+            padding = 20
+            spacing = 8
+            
+            squares = [
+                QRect(padding, padding, square_size, square_size),
+                QRect(padding + square_size + spacing, padding, square_size, square_size),
+                QRect(padding, padding + square_size + spacing, square_size, square_size),
+                QRect(padding + square_size + spacing, padding + square_size + spacing, square_size, square_size)
+            ]
+            
+            for square in squares:
+                painter.drawRect(square)
+            
+            painter.end()
+            self.original_preview.setPixmap(pixmap)
         
     def select_image(self):
         """选择图片文件"""
@@ -509,12 +524,7 @@ class SystemIconReplacer(QMainWindow):
 
 7. 保存为新的 DLL 文件
 
-8. 替换系统文件:
-   a. 进入安全模式
-   b. 备份原文件: imageres.dll
-   c. 替换为新文件
-
-9. 清除图标缓存:
+8. 清除图标缓存:
    a. 按 Win+R，输入: ie4uinit.exe -show
    b. 重启电脑
 
