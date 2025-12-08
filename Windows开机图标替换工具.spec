@@ -5,7 +5,7 @@ a = Analysis(
     ['scr\\main.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('image', 'image')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
