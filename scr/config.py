@@ -44,7 +44,7 @@ STYLES = {
         font-weight: bold; 
         padding: 20px;
         color: #2c3e50;
-        font-family: "Segoe UI", Arial, sans-serif;
+        font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
     ''',
     'warning_box': '''
         QGroupBox {
@@ -52,6 +52,7 @@ STYLES = {
             border-radius: 8px;
             background-color: #fef3f2;
             margin-top: 10px;
+            padding: 5px;
         }
         QGroupBox::title {
             subcontrol-origin: margin;
@@ -59,6 +60,7 @@ STYLES = {
             padding: 0 10px;
             color: #e74c3c;
             font-weight: bold;
+            font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
         }
     ''',
     'warning_text': '''
@@ -66,6 +68,8 @@ STYLES = {
         font-weight: bold;
         padding: 10px;
         font-size: 14px;
+        font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+        line-height: 1.5;
     ''',
     'group_box': '''
         QGroupBox {
@@ -92,6 +96,8 @@ STYLES = {
             padding: 10px;
             font-size: 14px;
             border: none;
+            font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+            min-height: 50px;
         }
         QPushButton:hover {
             background-color: #2980b9;
@@ -112,6 +118,8 @@ STYLES = {
             padding: 12px;
             font-size: 16px;
             border: none;
+            font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+            min-height: 50px;
         }
         QPushButton:hover {
             background-color: #229954;
@@ -130,6 +138,7 @@ STYLES = {
         margin-top: 15px;
         background-color: #f5f5f5;
         border-radius: 4px;
+        font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
     ''',
     'preview_area': '''
         border: 2px solid #ddd;
